@@ -15,47 +15,83 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeplayground.ui.theme.ComposePlaygroundTheme
 
 class MainActivity : ComponentActivity() {
+    private val dummyPosts = listOf(
+        UserPost("Compose UI", "2 hours ago", R.drawable.jetpack_compose_icon),
+        UserPost("Jetpack Compose", "1 day ago", R.drawable.android_development),
+        UserPost("Small Project", "3 days ago")
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ComposePlaygroundTheme {
-                ProfileScreen()
+                ProfileScreen(dummyPosts)
             }
         }
     }
 }
 
+data class UserPost(
+    val title: String,
+    val timestamp: String,
+    val imageRes: Int? = null // Optional image
+)
+
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(posts: List<UserPost>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // Or use LazyColumn at root for better performance
             .padding(16.dp)
     ) {
-        // Top section: Avatar + name + username
+        // Profile header section
+        ProfileHeader()
+
+        Spacer(modifier = Modifier.height(24.dp))
+        Text("Posts", style = MaterialTheme.typography.titleMedium)
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // List of posts
+        posts.forEach { post ->
+            UserPostItem(post)
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+    }
+}
+
+@Composable
+fun ProfileHeader() {
+    Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
             Image(
-                painter = painterResource(id = R.drawable.img),
+                painter = painterResource(id = R.drawable.profile_pic),
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(80.dp)
@@ -70,33 +106,49 @@ fun ProfileScreen() {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Bio
-        Text(
-            text = "Android Developer | App architecture enthusiast | Coffee Lover ☕",
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Text("Android Developer | App architecture enthusiast | Coffee Lover ☕")
 
         Spacer(modifier = Modifier.height(12.dp))
-
-        // Stats
         Row {
-            ProfileStat(number = "1,720", label = "Followers")
+            ProfileStat(number = "120", label = "Followers")
             Spacer(modifier = Modifier.width(24.dp))
-            ProfileStat(number = "1,143", label = "Following")
+            ProfileStat(number = "80", label = "Following")
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-
-        // Edit profile button
         Button(onClick = { /* TODO */ }, modifier = Modifier.fillMaxWidth()) {
             Text("Edit Profile")
         }
+    }
+}
 
-        // Optional: User content
-        Spacer(modifier = Modifier.height(20.dp))
-        Text("Posts", style = MaterialTheme.typography.titleMedium)
-        // You can show a LazyColumn of posts here
+@Composable
+fun UserPostItem(post: UserPost) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(post.title, style = MaterialTheme.typography.titleSmall)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(post.timestamp, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+
+            post.imageRes?.let {
+                Spacer(modifier = Modifier.height(8.dp))
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
     }
 }
 
