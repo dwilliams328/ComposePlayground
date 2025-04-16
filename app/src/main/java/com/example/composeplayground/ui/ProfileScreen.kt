@@ -102,7 +102,7 @@ fun UserPostItem(post: UserPost) {
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(2.dp),
+            .shadow(5.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
