@@ -1,9 +1,5 @@
-package com.example.composeplayground
+package com.example.composeplayground.ui
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,31 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.composeplayground.ui.theme.ComposePlaygroundTheme
-
-class MainActivity : ComponentActivity() {
-    private val dummyPosts = listOf(
-        UserPost("Compose UI", "2 hours ago", R.drawable.jetpack_compose_icon),
-        UserPost("Jetpack Compose", "1 day ago", R.drawable.android_development),
-        UserPost("Small Project", "3 days ago")
-    )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            ComposePlaygroundTheme {
-                ProfileScreen(dummyPosts)
-            }
-        }
-    }
-}
-
-data class UserPost(
-    val title: String,
-    val timestamp: String,
-    val imageRes: Int? = null // Optional image
-)
+import com.example.composeplayground.R
 
 @Composable
 fun ProfileScreen(posts: List<UserPost>) {
@@ -161,3 +133,9 @@ fun ProfileStat(number: String, label: String) {
         Text(text = label, style = MaterialTheme.typography.bodySmall)
     }
 }
+
+data class UserPost(
+    val title: String,
+    val timestamp: String,
+    val imageRes: Int? = null // Optional image
+)
